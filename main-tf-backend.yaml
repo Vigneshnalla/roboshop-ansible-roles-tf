@@ -1,5 +1,5 @@
 - name: "install {{component}}"
-  hosts: "{{component}}"
+  hosts: "{{ ip_address }}"
   connection: local
   vars_files:
     - "variables-{{env}}.yaml"
