@@ -1,0 +1,46 @@
+- name: Copy mongodb repo
+  ansible.builtin.copy:
+    src: mongodb.repo
+    dest: /etc/yum.repos.d/mongodb.repo
+
+- name: Install MongoDB shell (mongosh)
+  ansible.builtin.package:
+    name: mongodb-mongosh
+    state: present
+- name: "Debug: Check the value of component"
+  ansible.builtin.debug:
+    msg: "The current component is: {{ component }}"
+
+- name: "Debug: Check MONGODB_HOST"
+  ansible.builtin.debug:
+    msg: "The MONGODB_HOST is: {{ MONGODB_HOST }}"
+
+- name: "get the catalogue entries count"
+  ansible.builtin.shell: >
+    mongosh --host {{ MONGODB_HOST }} --quiet --eval 'db = db.getSiblingDB("catalogue"); print(db.products.countDocuments())'
+  register: products_count
+  when: component == "catalogue"
+
+- name: "Debug: Check products_count value"
+  ansible.builtin.debug:
+    msg: "The value of products_count is: {{ products_count.stdout | default('not available') }}"
+
+- name: "get the user entries count"
+  ansible.builtin.shell: >
+    mongosh --host {{ MONGODB_HOST }} --quiet --eval 'db = db.getSiblingDB("users"); print(db.users.countDocuments())'
+  register: users_count
+  when: component == "user"
+
+- name: "Debug: Check users_count value"
+  ansible.builtin.debug:
+    msg: "The value of users_count is: {{ users_count.stdout | default('not available') }}"
+
+- name: "load catalogue data"
+  ansible.builtin.shell: >
+    mongosh --host {{ MONGODB_HOST }} < /app/schema/{{ component }}.js
+  when: component == "catalogue" and products_count.stdout | default('0') == "0"
+
+- name: "load user data"
+  ansible.builtin.shell: >
+    mongosh --host {{ MONGODB_HOST }} < /app/schema/{{ component }}.js
+  when: component == "user" and users_count.stdout | default('0') == "0"

@@ -1,0 +1,3 @@
+# rabbitmq_credentials.yml
+rq_user: "roboshop"
+rq_password: "roboshop123"

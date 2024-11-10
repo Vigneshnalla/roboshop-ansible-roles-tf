@@ -1,0 +1,10 @@
+MONGODB_HOST: mongodb.vigneshdev.online # submit your host
+REDIS_HOST: redis.vigneshdev.online
+MYSQL_HOST: mysql.vigneshdev.online
+RABBITMQ_HOST: rabbitmq.vigneshdev.online
+CATALOGUE_HOST: catalogue.vigneshdev.online
+USER_HOST: user.vigneshdev.online
+CART_HOST: cart.vigneshdev.online
+SHIPPING_HOST: shipping.vigneshdev.online
+PAYMENT_HOST: payment.vigneshdev.online
+DISPATCH_HOST: dispatch.vigneshdev.online
